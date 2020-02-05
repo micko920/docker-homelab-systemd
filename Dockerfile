@@ -110,27 +110,20 @@ VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 # override it when creating the container to e.g. to run a bash console instead.
 CMD [ "/sbin/init" ]
 
-# Fix update-alternatives with rmid man1 error.
-RUN mkdir -p /usr/share/man/man1
-
 # Install dependencies.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        sudo bash aptitude \
-       wget procps \
-       openjdk-11-jre-headless \
-       openjdk-11-jdk-headless \
-       python3-psycopg2 \
-       postgresql postgresql-contrib libpq-dev \
-       ca-certificates ca-certificates-java \
+       wget ca-certificates \
        iproute2 \
        python3-apt python3-pip python3-setuptools python3-wheel \
        python3-virtualenv \
-       python-pip \
     && rm -rf /var/lib/apt/lists/* \
     && rm -Rf /usr/share/doc && rm -Rf /usr/share/man \
     && apt-get clean
 
+# Fix update-alternatives with rmid man1 error.
+RUN mkdir -p /usr/share/man/man1
 
 ENV pip_packages "ansible cryptography"
 # Install Ansible via pip.
